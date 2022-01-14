@@ -1,30 +1,33 @@
 import pygame
 from text_button import Button
 
+# Class for the window
 class FontTest:
     def __init__(self):
         pygame.init()
+        # Window set up
         self.running = True
         self.WINDOW_WIDTH, self.WINDOW_HEIGHT = 800, 400
         self.WINDOW = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("Pygame SysFont Test")
 
-        self.base_font = pygame.font.get_default_font()
+        self.base_font = pygame.font.get_default_font() # For text that says which font is being shown
         self.fonts = pygame.font.get_fonts()
         self.font_index = 0
-        self.current_font = self.fonts[self.font_index]
+        self.current_font = self.fonts[self.font_index] # The current font being displayed in the center of the window
         self.text_colour = (255, 255, 255)
         self.bg_colour = (0, 0, 0)
 
         self.FPS = 60
 
+        # Box where you enter which font you want
         self.input_box = self.TextBox(self.WINDOW, self.WINDOW_WIDTH, self.WINDOW_HEIGHT, self.base_font, self.text_colour)
         self.example_text_caps = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
         self.example_text_lower = self.example_text_caps.lower()
         self.example_text_num = '0123456789'
 
-        # Button parameters
+        # Button arguments
         self.button_y = 7 * self.WINDOW_HEIGHT//8
         self.button_width = self.WINDOW_HEIGHT//8
         self.button_height = self.WINDOW_HEIGHT//8      
@@ -52,13 +55,14 @@ class FontTest:
 
             self.box_text = ''
             self.text_box = pygame.Rect(0, 0, (2 * self.WINDOW_WIDTH//3), self.WINDOW_HEIGHT//8)
+            # Box set in place as only one is needed
             self.text_box.center = (self.WINDOW_WIDTH//2, self.WINDOW_HEIGHT//4)
             self.active_text_box_colour = (140, 140, 140)
             self.passive_text_box_colour = (80, 80, 80)
             self.box_colour = self.passive_text_box_colour
             self.text_box_border = 5
 
-            self.active = False
+            self.active = False     # You can type in the box when active
 
         def draw_text_box(self):
             font = pygame.font.SysFont(self.base_font, self.font_size)
@@ -83,6 +87,7 @@ class FontTest:
         text_rect.center = pos
         self.WINDOW.blit(text_surface, text_rect)
 
+    # Handles the functionality of the buttons
     def check_buttons(self):
         for button in self.buttons:
             if button.check_clicked():
@@ -105,7 +110,9 @@ class FontTest:
 
     def draw_window(self):
         self.WINDOW.fill(self.bg_colour)
+        # Draws header text which displays which font is in use
         self.draw_text(self.WINDOW_HEIGHT//15, (self.WINDOW_WIDTH//2, self.input_box.text_box.center[1] - self.input_box.text_box.height), self.base_font, f'Current font: {self.current_font}')
+        # Draws all the example text in the middle
         try:
             self.draw_text(self.WINDOW_WIDTH//26, (self.WINDOW_WIDTH//2, self.WINDOW_HEIGHT//2), self.current_font, self.example_text_caps)
             self.draw_text(self.WINDOW_WIDTH//26, (self.WINDOW_WIDTH//2, self.WINDOW_HEIGHT//2 + 30), self.current_font, self.example_text_lower)
@@ -127,12 +134,14 @@ class FontTest:
                 if event.type == pygame.QUIT:
                     self.running = False
 
+                # Handles mouse clicks (for the input box)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.input_box.text_box.collidepoint(event.pos):
                         self.input_box.activate()
                     else:
                         self.input_box.deactivate()
                 
+                # Handles key presses (for typing in the input box and also cycling through fonts)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         self.font_index -= 1
@@ -155,7 +164,7 @@ class FontTest:
                             self.input_box.box_text += event.unicode
 
             for button in self.buttons:
-                button.update()
+                button.update()     # Sorts colouring for the buttons
             self.check_buttons()
             self.draw_window()
 

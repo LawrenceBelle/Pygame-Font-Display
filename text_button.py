@@ -1,8 +1,9 @@
 import pygame
 
+# Creates a rectangular button you can fill the center with text
 class Button:
     def __init__(self, pos, text, colour, hover_colour, width, height, window, function):
-        self.function = function
+        self.function = function    # To be paired with a function in the mainloop which decides how to handle it
         self.window = window
         self.base_font = pygame.font.get_default_font()
 
@@ -14,10 +15,10 @@ class Button:
         self.border = 5
 
         self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.rect.center = pos
+        self.rect.center = pos  # pos will be a tuple of (x_position, y_position)
         self.hovering = False
-        # Starting on true stops the button being pressed immediately
-        self.clicked = True
+        
+        self.clicked = True     # Starting on true stops the button being pressed immediately
 
     # Sees if button has been pressed
     def check_clicked(self):
@@ -50,7 +51,7 @@ class Button:
         text_rect.center = pos
         self.window.blit(text_surface, text_rect)
 
+    # Draws entire button
     def draw(self):
-        # draw rect with text inside
         pygame.draw.rect(self.window, self.colour, self.rect, self.border)
         self.draw_text(self.rect.height//2, self.rect.center, self.base_font, self.text)
